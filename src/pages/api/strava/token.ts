@@ -27,7 +27,7 @@ async function refreshAccessToken() {
     refreshToken = data.refresh_token;
     expiresAt = data.expires_at;
 
-    console.log("✅ New access token received:", accessToken);
+    console.log("✅ New access token received");
   } else {
     console.error("❌ Failed to refresh token:", data);
   }
