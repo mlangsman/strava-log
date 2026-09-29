@@ -20,7 +20,7 @@ It was also a good excuse to learn OAuth properly and get hands-on with the Next
 
 1. **Connect Strava.** You sign in with Strava's OAuth flow and grant read access to your activities.
 2. **Fetch your runs.** A server-side API route gets your last 30 activities, then fetches the detail for each one to get the splits.
-3. **Tidy the data.** Raw Strava values (metres, seconds) become things a person or a model can read: distance in km, time in minutes, pace in min/km, average and max heart rate, elevation gain and Strava's relative effort score.
+3. **Tidy the data.** Raw Strava values (metres, seconds) become things a person or a model can read: distance in km, time in minutes, pace per km, average and max heart rate, elevation gain and Strava's relative effort score.
 4. **Download the log.** One click gives you a Markdown-formatted text file with a summary table, a splits table for each run and a short prompt telling the AI what to look for.
 
 Here's a trimmed example of the output:
@@ -29,9 +29,9 @@ Here's a trimmed example of the output:
 # Strava Training Log 📊
 
 ## 🏃 Recent Activities
-| Date       | Name          | Type | Distance (km) | Time          | Pace          | Avg HR | Max HR | Elevation Gain (m) | Effort |
-|------------|---------------|------|---------------|---------------|---------------|--------|--------|--------------------|--------|
-| 2025-03-10 | Morning Run   | Run  | 8.02          | 42 min 15 sec | 5.27 min/km   | 148.2  | 171    | 64                 | 38     |
+| Date       | Name          | Type | Distance (km) | Time          | Pace     | Avg HR | Max HR | Elevation Gain (m) | Effort |
+|------------|---------------|------|---------------|---------------|----------|--------|--------|--------------------|--------|
+| 2025-03-10 | Morning Run   | Run  | 8.02          | 42 min 15 sec | 5:16 /km | 148.2  | 171    | 64                 | 38     |
 
 ## 📌 Instructions for ChatGPT
 Use this training log to analyze trends and suggest adjustments based on heart rate, pace, elevation, and effort levels.

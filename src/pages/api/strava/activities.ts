@@ -35,6 +35,17 @@ interface ProcessedActivity {
   splits: StravaSplit[];
 }
 
+// Format seconds as m:ss, e.g. 316 -> "5:16"
+function formatDuration(seconds: number): string {
+  const total = Math.round(seconds);
+  return `${Math.floor(total / 60)}:${String(total % 60).padStart(2, "0")}`;
+}
+
+// Pace in minutes per km, e.g. 316 seconds over 1 km -> "5:16 /km"
+function formatPace(seconds: number, metres: number): string {
+  if (!metres) return "N/A";
+  return `${formatDuration(seconds / (metres / 1000))} /km`;
+}
 
   export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     try {
@@ -68,7 +79,7 @@ interface ProcessedActivity {
         );
 
         if (!activityResponse.ok) return null;
-        const activityDetails: { splits_standard?: { distance: number; elapsed_time: number; pace: number }[] } = await activityResponse.json();
+        const activityDetails: { splits_metric?: { distance: number; moving_time: number }[] } = await activityResponse.json();
 
         return {
           id: activity.id,
@@ -77,16 +88,16 @@ interface ProcessedActivity {
           type: activity.type,
           distance_km: (activity.distance / 1000).toFixed(2),
           moving_time: `${Math.floor(activity.moving_time / 60)} min ${activity.moving_time % 60} sec`,
-          pace: `${(activity.moving_time / (activity.distance / 1000)).toFixed(2)} min/km`,
+          pace: formatPace(activity.moving_time, activity.distance),
           avg_hr: activity.average_heartrate?.toString() || "N/A",
           max_hr: activity.max_heartrate?.toString() || "N/A",
           elevation_gain_m: activity.total_elevation_gain || 0,
           perceived_effort: activity.suffer_score?.toString() || "N/A",
-          splits: activityDetails.splits_standard?.map((split, index) => ({
+          splits: activityDetails.splits_metric?.map((split, index) => ({
             split_number: index + 1,
             distance_km: (split.distance / 1000).toFixed(2),
-            time: `${Math.floor(split.elapsed_time / 60)}:${split.elapsed_time % 60}`,
-            pace: `${split.pace.toFixed(2)} min/km`,
+            time: formatDuration(split.moving_time),
+            pace: formatPace(split.moving_time, split.distance),
           })) || [],
         };
       })
